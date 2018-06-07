@@ -1,0 +1,23 @@
+{
+    "name": "kredsblockchain/web-wallet-api-client",
+    "description": "A Client for using the the Kreds WebWallet API",
+    "license": "GPL-3.0-or-later",
+    "type": "project",
+    "keywords": ["WebWallet", "API", "Client", "PHP", "REST"],
+    "authors": [
+        {
+            "name": "Kreds/Fl3xMedia",
+            "email": "support@fl3xmedia.com",
+            "homepage": "http://kredsblockchain.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Kreds\\WebWalletApiClient\\": [ "src" ]
+        }
+    },
+    "require": {
+        "innobrig/flex-input": "^1.0",
+        "mashape/unirest-php": "3.*"
+    }
+}
