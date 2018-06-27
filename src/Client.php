@@ -20,7 +20,7 @@ class Client
 
     public function createAccount ()
     {
-        $url      = $this->getUrl('account');
+        $url      = $this->getUrl('admin/account');
         $headers  = $this->genHeader();
         $response = Request::post ($url, $headers);
 
@@ -37,7 +37,7 @@ class Client
             throw new \InvalidArgumentException('Invalid [amount] received');
         }
 
-        $url      = $this->getUrl('account/credit', [ $account, $amount ]);
+        $url      = $this->getUrl('admin/account/credit', [ $account, $amount ]);
         $headers  = $this->genHeader();
         $response = Request::post ($url, $headers);
 
@@ -45,9 +45,9 @@ class Client
     }
 
 
-    public function getAddresses ()
+    public function getAddresses ($page=1, $pagesize=100)
     {
-        $url      = $this->getUrl('addresses');
+        $url      = $this->getUrl('user/addresses', [ $page, $pagesize ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -57,7 +57,7 @@ class Client
 
     public function getBalance ()
     {
-        $url      = $this->getUrl('balance');
+        $url      = $this->getUrl('user/balance');
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -65,9 +65,9 @@ class Client
     }
 
 
-    public function getDeposits ()
+    public function getDeposits ($page=1, $pagesize=100)
     {
-        $url      = $this->getUrl('deposits');
+        $url      = $this->getUrl('user/deposits', [ $page, $pagesize ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -77,7 +77,7 @@ class Client
 
     public function getDepositsSum (string $account, int $hours=24)
     {
-        $url      = $this->getUrl('depositsSum', [ $account, $hours ]);
+        $url      = $this->getUrl('admin/depositsSum', [ $account, $hours ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -98,7 +98,7 @@ class Client
 
     public function getSummary ()
     {
-        $url      = $this->getUrl('summary');
+        $url      = $this->getUrl('user/summary');
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -116,9 +116,9 @@ class Client
     }
 
 
-    public function getWithdraws ()
+    public function getWithdraws ($page=1, $pagesize=100)
     {
-        $url      = $this->getUrl('withdraws');
+        $url      = $this->getUrl('user/withdraws', [ $page, $pagesize ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -128,7 +128,7 @@ class Client
 
     public function getWithdrawsSum (string $account, int $hours=24)
     {
-        $url      = $this->getUrl('withdrawsSum', [ $account, $hours ]);
+        $url      = $this->getUrl('admin/withdrawsSum', [ $account, $hours ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -138,7 +138,7 @@ class Client
 
     public function getTransaction (string $txid)
     {
-        $url      = $this->getUrl('transactions', [ $txid ]);
+        $url      = $this->getUrl('user/transaction', [ $txid ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -148,7 +148,7 @@ class Client
 
     public function getTransactions ()
     {
-        $url      = $this->getUrl('transactions');
+        $url      = $this->getUrl('user/transactions');
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -158,7 +158,7 @@ class Client
 
     public function newAddress ()
     {
-        $url      = $this->getUrl('addresses');
+        $url      = $this->getUrl('user/address');
         $headers  = $this->genHeader();
         $response = Request::post ($url, $headers);
 
@@ -176,7 +176,6 @@ class Client
     }
 
 
-
     public function withdraw (string $toAddress, float $amount)
     {
         if (!$toAddress) {
@@ -186,7 +185,7 @@ class Client
             throw new \InvalidArgumentException('Invalid [amount] received');
         }
 
-        $url       = $this->getUrl('withdraws', [ $toAddress, $amount ]);
+        $url       = $this->getUrl('user/withdraw', [ $toAddress, $amount ]);
         $headers   = $this->genHeader();
         $response = Request::post ($url, $headers);
 
