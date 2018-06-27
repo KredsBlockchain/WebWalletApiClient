@@ -42,7 +42,6 @@ class Client
         $response = Request::post ($url, $headers);
 
         return $response->body;
-
     }
 
 
@@ -69,6 +68,16 @@ class Client
     public function getDeposits ()
     {
         $url      = $this->getUrl('deposits');
+        $headers  = $this->genHeader();
+        $response = Request::get ($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function getDepositsSum (string $account, int $hours=24)
+    {
+        $url      = $this->getUrl('depositsSum', [ $account, $hours ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
@@ -110,6 +119,16 @@ class Client
     public function getWithdraws ()
     {
         $url      = $this->getUrl('withdraws');
+        $headers  = $this->genHeader();
+        $response = Request::get ($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function getWithdrawsSum (string $account, int $hours=24)
+    {
+        $url      = $this->getUrl('withdrawsSum', [ $account, $hours ]);
         $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
