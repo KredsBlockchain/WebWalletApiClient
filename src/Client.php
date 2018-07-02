@@ -2,11 +2,17 @@
 
 namespace Kreds\WebWalletApiClient;
 
-use InnoBrig\FlexInput\Input;
 use Unirest\Request;
-use Unirest\Request\Body;
 
 
+/* ********************************************************************************* */
+/* **************** Reference Implementation for the Kreds WebWallet API *********** */
+/* ********************************************************************************* */
+/* *** Note: For clarity the available methods have been divided into 3 sections *** */
+/* **   1) General methods                                                       *** */
+/* **   2) User methods                                                          *** */
+/* **   3) Admin methods                                                         *** */
+/* ********************************************************************************* */
 class Client
 {
     protected $_config;
@@ -18,88 +24,14 @@ class Client
     }
 
 
-    public function createAccount ()
-    {
-        $url      = $this->getUrl('admin/account');
-        $headers  = $this->genHeader();
-        $response = Request::post ($url, $headers);
 
-        return $response->body;
-    }
-
-
-    public function creditAccount (string $account, float $amount)
-    {
-        if (!$account) {
-            throw new \InvalidArgumentException('Invalid [account] received');
-        }
-        if ($amount <= 0) {
-            throw new \InvalidArgumentException('Invalid [amount] received');
-        }
-
-        $url      = $this->getUrl('admin/account/credit', [ $account, $amount ]);
-        $headers  = $this->genHeader();
-        $response = Request::post ($url, $headers);
-
-        return $response->body;
-    }
-
-
-    public function getAddresses ($page=1, $pagesize=100)
-    {
-        $url      = $this->getUrl('user/addresses', [ $page, $pagesize ]);
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
-
-        return $response->body;
-    }
-
-
-    public function getBalance ()
-    {
-        $url      = $this->getUrl('user/balance');
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
-
-        return $response->body;
-    }
-
-
-    public function getDeposits ($page=1, $pagesize=100)
-    {
-        $url      = $this->getUrl('user/deposits', [ $page, $pagesize ]);
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
-
-        return $response->body;
-    }
-
-
-    public function getDepositsSum (string $account, int $hours=24)
-    {
-        $url      = $this->getUrl('admin/depositsSum', [ $account, $hours ]);
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
-
-        return $response->body;
-    }
-
-
-    // Note: getInfo is the only method which does not require authentication
+    /* ********************************************************************** */
+    /* ******** Public functions which do not require authentication ******** */
+    /* ********************************************************************** */
     public function getInfo ()
     {
-        $url      = $this->getUrl('info');
+        $url      = $this->_getUrl('info');
         $headers  = [ 'Accept' => 'application/json' ];
-        $response = Request::get ($url, $headers);
-
-        return $response->body;
-    }
-
-
-    public function getSummary ()
-    {
-        $url      = $this->getUrl('user/summary');
-        $headers  = $this->genHeader();
         $response = Request::get ($url, $headers);
 
         return $response->body;
@@ -108,75 +40,79 @@ class Client
 
     public function getStatus ()
     {
-        $url      = $this->getUrl('status');
-        $headers  = $this->genHeader();
+        $url      = $this->_getUrl('status');
+        $headers  = [ 'Accept' => 'application/json' ];
         $response = Request::get ($url, $headers);
 
         return $response->body;
     }
 
 
-    public function getWithdraws ($page=1, $pagesize=100)
+
+    /* ********************************************************************** */
+    /* ********** User functions which require user authentication ********** */
+    /* ********************************************************************** */
+    public function userAddressCreate ()
     {
-        $url      = $this->getUrl('user/withdraws', [ $page, $pagesize ]);
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
+        $url      = $this->_getUrl('user/address');
+        $headers  = $this->_genHeader();
+        $response = Request::post($url, $headers);
 
         return $response->body;
     }
 
 
-    public function getWithdrawsSum (string $account, int $hours=24)
+    public function userAddressesGet ($page=1, $pagesize=100)
     {
-        $url      = $this->getUrl('admin/withdrawsSum', [ $account, $hours ]);
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
+        $url      = $this->_getUrl('user/addresses', [ $page, $pagesize ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
 
         return $response->body;
     }
 
 
-    public function getTransaction (string $txid)
+    public function userBalanceGet ()
     {
-        $url      = $this->getUrl('user/transaction', [ $txid ]);
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
+        $url      = $this->_getUrl('user/balance');
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
 
         return $response->body;
     }
 
 
-    public function getTransactions ()
+    public function userDepositsGet ($page=1, $pagesize=100)
     {
-        $url      = $this->getUrl('user/transactions');
-        $headers  = $this->genHeader();
-        $response = Request::get ($url, $headers);
+        $url      = $this->_getUrl('user/deposits', [ $page, $pagesize ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
 
         return $response->body;
     }
 
 
-    public function newAddress ()
+    public function userSummaryGet ()
     {
-        $url      = $this->getUrl('user/address');
-        $headers  = $this->genHeader();
-        $response = Request::post ($url, $headers);
+        $url      = $this->_getUrl('user/summary');
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
 
         return $response->body;
     }
 
 
-    public function status ()
+    public function userWithdrawsGet ($page=1, $pagesize=100)
     {
-        $url      = $this->getUrl('status');
-        $headers  = $this->genHeader();
-        $response = Request::post ($url, $headers);
+        $url      = $this->_getUrl('user/withdraws', [ $page, $pagesize ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
 
         return $response->body;
     }
 
 
-    public function withdraw (string $toAddress, float $amount)
+    public function userWithdraw (string $toAddress, float $amount, bool $takeFeeFromAmount=true)
     {
         if (!$toAddress) {
             throw new \InvalidArgumentException('Invalid [account] received');
@@ -185,16 +121,147 @@ class Client
             throw new \InvalidArgumentException('Invalid [amount] received');
         }
 
-        $url       = $this->getUrl('user/withdraw', [ $toAddress, $amount ]);
-        $headers   = $this->genHeader();
-        $response = Request::post ($url, $headers);
+        $url       = $this->_getUrl('user/withdraw', [ $toAddress, $amount ]);
+        $headers   = $this->_genHeader();
+        $response = Request::post($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function userTransactionGet (string $txid)
+    {
+        if (!$txid) {
+            throw new \InvalidArgumentException('Invalid [txid] received');
+        }
+
+        $url      = $this->_getUrl('user/transaction', [ $txid ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function userTransactionsGet ($page=1, $pagesize=100)
+    {
+        $url      = $this->_getUrl('user/transactions', [ $page, $pagesize ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
 
         return $response->body;
     }
 
 
 
-    protected function genHeader (array $params=[]) : array
+    /* ********************************************************************** */
+    /* ********* Admin functions which require admin authentication ********* */
+    /* ********************************************************************** */
+    public function adminAccountBalance (string $account)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+
+        $url      = $this->_getUrl('admin/account/balance', [ $account ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function adminAccountCreate ()
+    {
+        $url      = $this->_getUrl('admin/account');
+        $headers  = $this->_genHeader();
+        $response = Request::post($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function adminAccountCredit (string $account, float $amount)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Invalid [amount] received');
+        }
+
+        $url      = $this->_getUrl('admin/account/credit', [ $account, $amount ]);
+        $headers  = $this->_genHeader();
+        $response = Request::post($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function adminAccountDebit (string $account, float $amount)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Invalid [amount] received');
+        }
+
+        $url      = $this->_getUrl('admin/account/debit', [ $account, $amount ]);
+        $headers  = $this->_genHeader();
+        $response = Request::post($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function adminAccountDepositsSum (string $account, int $hours=24)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+
+        $url      = $this->_getUrl('admin/depositsSum', [ $account, $hours ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
+
+        return $response->body;
+    }
+
+
+    public function adminAccountReset (string $account)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+
+        $url      = $this->_getUrl('admin/account/reset', [ $account ]);
+        $headers  = $this->_genHeader();
+        $response = Request::post($url, $headers);
+
+        return $response->body;
+    }
+
+    public function adminAccountWithdrawsSum (string $account, int $hours=24)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+
+        $url      = $this->_getUrl('admin/withdrawsSum', [ $account, $hours ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
+
+        return $response->body;
+    }
+
+
+
+
+    /* ********************************************************************** */
+    /* ********************* Internal/Private methods *********************** */
+    /* ********************************************************************** */
+    protected function _genHeader (array $params=[]) : array
     {
         $params['nonce'] = strval(round(microtime(true) * 1000,0));
         $payload         = base64_encode(json_encode($params));
@@ -209,7 +276,7 @@ class Client
     }
 
 
-    protected function getUrl (string $functionUrl, array $params=[]) : string
+    protected function _getUrl (string $functionUrl, array $params=[]) : string
     {
         $url = $this->_config['baseUrl'] . '/' . $functionUrl;
         if ($params) {
