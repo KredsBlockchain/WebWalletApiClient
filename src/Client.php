@@ -221,7 +221,7 @@ class Client
             throw new \InvalidArgumentException('Invalid [account] received');
         }
 
-        $url      = $this->_getUrl('admin/depositsSum', [ $account, $hours ]);
+        $url      = $this->_getUrl('admin/account/depositsSum', [ $account, $hours ]);
         $headers  = $this->_genHeader();
         $response = Request::get($url, $headers);
 
@@ -248,7 +248,7 @@ class Client
             throw new \InvalidArgumentException('Invalid [account] received');
         }
 
-        $url      = $this->_getUrl('admin/withdrawsSum', [ $account, $hours ]);
+        $url      = $this->_getUrl('admin/account/withdrawsSum', [ $account, $hours ]);
         $headers  = $this->_genHeader();
         $response = Request::get($url, $headers);
 
