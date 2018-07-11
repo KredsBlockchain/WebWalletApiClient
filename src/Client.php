@@ -171,9 +171,9 @@ class Client
     }
 
 
-    public function adminAccountCreate ()
+    public function adminAccountCreate (float $initialBalance=0.0)
     {
-        $url      = $this->_getUrl('admin/account');
+        $url      = $this->_getUrl('admin/account', [ 'withBalance', $initialBalance ]);
         $headers  = $this->_genHeader();
         $response = Request::post($url, $headers);
 
@@ -221,7 +221,7 @@ class Client
             throw new \InvalidArgumentException('Invalid [account] received');
         }
 
-        $url      = $this->_getUrl('admin/account/depositsSum', [ $account, $hours ]);
+        $url      = $this->_getUrl('admin/account/deposits/sum', [ $account, $hours ]);
         $headers  = $this->_genHeader();
         $response = Request::get($url, $headers);
 
@@ -242,13 +242,28 @@ class Client
         return $response->body;
     }
 
+
+    public function adminAccountWithdrawAvailable (string $account)
+    {
+        if (!$account) {
+            throw new \InvalidArgumentException('Invalid [account] received');
+        }
+
+        $url      = $this->_getUrl('admin/account/withdraws/available', [ $account ]);
+        $headers  = $this->_genHeader();
+        $response = Request::get($url, $headers);
+
+        return $response->body;
+    }
+
+
     public function adminAccountWithdrawsSum (string $account, int $hours=24)
     {
         if (!$account) {
             throw new \InvalidArgumentException('Invalid [account] received');
         }
 
-        $url      = $this->_getUrl('admin/account/withdrawsSum', [ $account, $hours ]);
+        $url      = $this->_getUrl('admin/account/withdraws/sum', [ $account, $hours ]);
         $headers  = $this->_genHeader();
         $response = Request::get($url, $headers);
 
