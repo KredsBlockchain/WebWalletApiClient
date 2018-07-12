@@ -48,6 +48,20 @@ class Client
     }
 
 
+    public function validateAddress (string $address)
+    {
+        if (!$address) {
+            throw new \InvalidArgumentException('Invalid [address] received');
+        }
+
+        $url      = $this->_getUrl('validateAddress', [ $address ] );
+        $headers  = [ 'Accept' => 'application/json' ];
+        $response = Request::get ($url, $headers);
+
+        return $response->body;
+    }
+
+
 
     /* ********************************************************************** */
     /* ********** User functions which require user authentication ********** */
