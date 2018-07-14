@@ -135,7 +135,7 @@ class Client
             throw new \InvalidArgumentException('Invalid [amount] received');
         }
 
-        $url       = $this->_getUrl('user/withdraw', [ $toAddress, $amount ]);
+        $url       = $this->_getUrl('user/withdraw', [ $toAddress, $amount, $takeFeeFromAmount ]);
         $headers   = $this->_genHeader();
         $response = Request::post($url, $headers);
 

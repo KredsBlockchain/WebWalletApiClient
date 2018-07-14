@@ -68,3 +68,6 @@ var_dump ($client->adminAccountCreate());
 //print "<br/><br>******************************* WithdrawsAccount ******************************************<br/><br/>";
 //var_dump ($client->adminAccountWithdrawsSum('42552082ce4f42a42a6adaa4f6f03be226508417d2ed7f1147f0b8d03a0599e1'));
 
+// Disabled because we need a real account to check
+//print "<br/><br>******************************* WithdrawsAvailable ******************************************<br/><br/>";
+//var_dump ($client->adminAccountWithdrawAvailable('42552082ce4f42a42a6adaa4f6f03be226508417d2ed7f1147f0b8d03a0599e1'));
