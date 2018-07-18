@@ -86,9 +86,9 @@ class Client
     }
 
 
-    public function userBalanceGet ()
+    public function userBalanceGet ($fromWallet=false)
     {
-        $url      = $this->_getUrl('user/balance');
+        $url      = $this->_getUrl('user/balance', [ (int)$fromWallet ]);
         $headers  = $this->_genHeader();
         $response = Request::get($url, $headers);
 
@@ -171,13 +171,13 @@ class Client
     /* ********************************************************************** */
     /* ********* Admin functions which require admin authentication ********* */
     /* ********************************************************************** */
-    public function adminAccountBalance (string $account)
+    public function adminAccountBalance (string $account, bool $fromWallet=false)
     {
         if (!$account) {
             throw new \InvalidArgumentException('Invalid [account] received');
         }
 
-        $url      = $this->_getUrl('admin/account/balance', [ $account ]);
+        $url      = $this->_getUrl('admin/account/balance', [ $account, (int)$fromWallet ]);
         $headers  = $this->_genHeader();
         $response = Request::get($url, $headers);
 
